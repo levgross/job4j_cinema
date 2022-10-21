@@ -29,7 +29,7 @@ public class SessionService {
                 "rush",
                 "titanic"
         );
-        for(String name : names) {
+        for (String name : names) {
             store.add(new Session(0, name));
         }
     }
