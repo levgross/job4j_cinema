@@ -32,7 +32,7 @@ public class UserController {
 
     @PostMapping("/login")
     public String login(@ModelAttribute User user, HttpServletRequest req) {
-        Optional<User> userDb = userService.findUserByEmail(user.getEmail());
+        Optional<User> userDb = userService.findUserByEmailAndPhone(user.getEmail(), user.getPhone());
         if (userDb.isEmpty()) {
             return "redirect:/loginPage?fail=true";
         }
@@ -48,8 +48,11 @@ public class UserController {
     }
 
     @GetMapping("/formAddUser")
-    public String formAddUser(Model model, HttpSession session) {
+    public String formAddUser(Model model,
+                              @RequestParam(name = "fail", required = false) Boolean fail,
+                              HttpSession session) {
         model.addAttribute("user", Utility.check(session));
+        model.addAttribute("fail", fail != null);
         return "addUser";
     }
 
@@ -57,21 +60,8 @@ public class UserController {
     public String registration(Model model, @ModelAttribute User user) {
         Optional<User> regUser = userService.add(user);
         if (regUser.isEmpty()) {
-            return "redirect:/fail";
+            return "redirect:/formAddUser?fail=true";
         }
-        return "redirect:/success";
-    }
-
-    @GetMapping("/success")
-    public String success(Model model, HttpSession session) {
-        model.addAttribute("user", Utility.check(session));
-        return "success";
-    }
-
-    @GetMapping("/fail")
-    public String fail(Model model, HttpSession session) {
-        model.addAttribute("message", "Пользователь с такой почтой уже существует");
-        model.addAttribute("user", Utility.check(session));
-        return "fail";
+        return "redirect:/loginPage";
     }
 }

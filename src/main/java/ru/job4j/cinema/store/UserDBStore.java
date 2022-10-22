@@ -43,17 +43,17 @@ public class UserDBStore {
         return Optional.empty();
     }
 
-    public Optional<User> findUserByEmail(String email) {
+    public Optional<User> findUserByEmailAndPhone(String email, String phone) {
         try (Connection cn = pool.getConnection();
              PreparedStatement ps = cn.prepareStatement(FIND_USER)) {
             ps.setString(1, email);
             try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
+                if (rs.next() && phone.equals(rs.getString("phone"))) {
                     return Optional.of(createUser(rs));
                 }
             }
         } catch (SQLException e) {
-            LOG.error("Exception in method .findUserByEmail(email)", e);
+            LOG.error("Exception in method .findUserByEmailAndPhone(email, phone)", e);
         }
         return Optional.empty();
     }

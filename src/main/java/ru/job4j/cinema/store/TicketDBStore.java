@@ -14,10 +14,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class TicketDBStore {
-    private final static String FIND_ALL = "SELECT * FROM ticket";
+    private final static String FIND_ALL_BY_SESSION = "SELECT * FROM ticket WHERE session_id = ?";
     private final static String ADD = "INSERT INTO ticket(session_id, pos_row, cell, user_id)"
             + "VALUES (?, ?, ?, ?)";
     private final static String FIND_BY_ID = "SELECT * FROM ticket WHERE id = ?";
@@ -28,10 +29,11 @@ public class TicketDBStore {
         this.pool = pool;
     }
 
-    public List<Ticket> findAll() {
+    public List<Ticket> findAllBySessionId(int id) {
         List<Ticket> tickets = new ArrayList<>();
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps = cn.prepareStatement(FIND_ALL)) {
+             PreparedStatement ps = cn.prepareStatement(FIND_ALL_BY_SESSION)) {
+            ps.setInt(1, id);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     tickets.add(createTicket(rs));
@@ -43,7 +45,7 @@ public class TicketDBStore {
         return tickets;
     }
 
-    public void add(Ticket ticket) {
+    public Optional<Ticket> add(Ticket ticket) {
         try (Connection cn = pool.getConnection();
              PreparedStatement ps = cn.prepareStatement(ADD, PreparedStatement.RETURN_GENERATED_KEYS)) {
             ps.setInt(1, ticket.getSession().getId());
@@ -56,25 +58,29 @@ public class TicketDBStore {
                     ticket.setId(rs.getInt(1));
                 }
             }
+            return Optional.of(ticket);
         } catch (SQLException e) {
             LOG.error("Exception in method .add(Ticket)", e);
         }
+        return Optional.empty();
     }
 
-    public Ticket findById(int id) {
+    public Optional<Ticket> findById(int id) {
         try (Connection cn = pool.getConnection();
              PreparedStatement ps = cn.prepareStatement(FIND_BY_ID)) {
             ps.setInt(1, id);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    return createTicket(rs);
+                    return Optional.of(createTicket(rs));
                 }
             }
         } catch (SQLException e) {
             LOG.error("Exception in method .findById(int)", e);
         }
-        return null;
+        return Optional.empty();
     }
+
+
 
     private Ticket createTicket(ResultSet rs) throws SQLException {
         return new Ticket(

@@ -26,14 +26,15 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                 <div class="navbar-nav">
-                    <a class="nav-item nav-link" th:href="@{/index}">Главная</a>
+                    <a class="nav-item nav-link" th:href="@{/index}">Main</a>
+					<a class="nav-item nav-link" th:href="@{/formAddUser}">Registration</a>
 					<a class="nav-item nav-link" th:if="${user.username == 'Guest'}" th:href="@{/loginPage}">
 						<span th:text="${user.username}"></span>
-						<span> | Войти</span>
+						<span> | Login</span>
 					</a>
 					<a class="nav-item nav-link" th:if="${user.username != 'Guest'}" th:href="@{/logout}">
 						<span th:text="${user.username}"></span>
-						<span> | Выйти</span>
+						<span> | Logout</span>
 					</a>
                 </div>
             </div>
@@ -49,12 +50,10 @@
     </div>
 	<h3 th:text="'The row ' + ${row} + ' is chosen.'"></h3>
 	<h3 th:text="'The seat ' + ${cell} + ' is chosen.'"></h3>
-	<div class="card-body">
+			<div class="card-body">
                 <form th:action="@{/createTicket}" method="POST" enctype="multipart/form-data">
-				<input type="hidden" name="id" value="0"/>
-				
                     <button type="submit" class="btn btn-primary">Buy</button>
-					<button type="cancel" class="btn btn-primary">Cancel</button>
+					<a class="btn btn-primary" th:href="@{/index}" role="button">Cancel</a>
                 </form>
             </div>
 </div>

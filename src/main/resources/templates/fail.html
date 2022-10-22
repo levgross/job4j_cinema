@@ -17,42 +17,32 @@
 
     <title>Работа мечты</title>
 </head>
-<body>
 <div class="container">
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="#">Работа мечты</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-            <div class="navbar-nav">
-                <a class="nav-item nav-link" th:href="@{/index}">Главная</a>
-                <a class="nav-item nav-link" th:href="@{/posts}">Вакансии</a>
-                <a class="nav-item nav-link" th:href="@{/formAddPost}">Добавить вакансию</a>
-                <a class="nav-item nav-link" th:href="@{/candidates}">Кандидаты</a>
-				<a class="nav-item nav-link" th:href="@{/formAddCandidate}">Добавить кандидата</a>
-				<a class="nav-item nav-link" th:href="@{/formAddUser}">Регистрация</a>
-				<a class="nav-item nav-link" th:if="${user.email == 'Гость'}" th:href="@{/loginPage}">
-					<span th:text="${user.email}"></span>
-					<span> | Войти</span>
-				</a>
-				<a class="nav-item nav-link" th:if="${user.email != 'Гость'}" th:href="@{/logout}">
-					<span th:text="${user.email}"></span>
-					<span> | Выйти</span>
-				</a>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" href="#">Cinema</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                <div class="navbar-nav">
+                    <a class="nav-item nav-link" th:href="@{/index}">Main</a>
+					<a class="nav-item nav-link" th:href="@{/formAddUser}">Registration</a>
+					<a class="nav-item nav-link" th:if="${user.username == 'Guest'}" th:href="@{/loginPage}">
+						<span th:text="${user.username}"></span>
+						<span> | Login</span>
+					</a>
+					<a class="nav-item nav-link" th:if="${user.username != 'Guest'}" th:href="@{/logout}">
+						<span th:text="${user.username}"></span>
+						<span> | Logout</span>
+					</a>
+                </div>
             </div>
-        </div>
-    </nav>
-    <div class="row pt-3">
-        <div class="card" style="width: 100%">
-            <div class="card-header">
-                Регистрация нового пользователя.
-            </div>
-            <div class="card-body">
-			<td th:text="${message}"/>
-			</div>
-        </div>
+        </nav>
+    <div>
+		<a th:text="${message}"></a>
+    </div>
+	<div>
+		<a class="btn btn-primary" th:href="@{/hallRow}" role="button">Try once more</a>
     </div>
 </div>
-</body>
 </html>

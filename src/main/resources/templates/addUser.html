@@ -26,14 +26,15 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                 <div class="navbar-nav">
-                    <a class="nav-item nav-link" th:href="@{/index}">Главная</a>
+                    <a class="nav-item nav-link" th:href="@{/index}">Main</a>
+					<a class="nav-item nav-link active" th:href="@{/formAddUser}">Registration</a>
 					<a class="nav-item nav-link" th:if="${user.username == 'Guest'}" th:href="@{/loginPage}">
 						<span th:text="${user.username}"></span>
-						<span> | Войти</span>
+						<span> | Login</span>
 					</a>
 					<a class="nav-item nav-link" th:if="${user.username != 'Guest'}" th:href="@{/logout}">
 						<span th:text="${user.username}"></span>
-						<span> | Выйти</span>
+						<span> | Logout</span>
 					</a>
                 </div>
             </div>
@@ -41,21 +42,24 @@
     <div class="row pt-3">
         <div class="card" style="width: 100%">
             <div class="card-header">
-                Регистрация нового пользователя.
+                New user registration.
             </div>
             <div class="card-body">
+				<div th:if="${fail}" class="alert alert-danger" role="alert">
+                    Email or phone number is registered already!
+                </div>
 			    <form th:action="@{/registration}" method="POST">
                     <input type="hidden" name="id" value="0"/>
 					<div class="form-group">
-                        <label for="name">Your name</label>
+                        <label for="username">Your name</label>
 						<input type="text" class="form-control" name="username" id="username"/>
 					</div>
                     <div class="form-group">
-                        <label for="name">Your e-mail</label>
+                        <label for="email">Your e-mail</label>
 						<input type="text" class="form-control" name="email" id="email"/>
 					</div>
 					<div class="form-group">
-                        <label for="desc">Your phone number</label>
+                        <label for="phone">Your phone number</label>
                         <input type="text" class="form-control" name="phone" id="phone"/>
                         </label>
                     </div>

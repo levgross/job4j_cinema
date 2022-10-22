@@ -20,7 +20,7 @@ public class UserService {
         return store.add(user);
     }
 
-    public Optional<User> findUserByEmail(String email) {
-        return store.findUserByEmail(email);
+    public Optional<User> findUserByEmailAndPhone(String email, String phone) {
+        return store.findUserByEmailAndPhone(email, phone);
     }
 }

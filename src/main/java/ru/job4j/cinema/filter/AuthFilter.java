@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Set;
 
-
+@Component
 public class AuthFilter implements Filter {
     @Override
     public void doFilter(
@@ -19,9 +19,14 @@ public class AuthFilter implements Filter {
         HttpServletResponse resp = (HttpServletResponse) servletResponse;
         String uri = req.getRequestURI();
         Set<String> pages = Set.of(
-                "createTicket"
+                "loginPage",
+                "login",
+                "index",
+                "photoSession",
+                "formAddUser",
+                "registration"
                 );
-        if (!anyMatch(uri, pages)) {
+        if (anyMatch(uri, pages)) {
             chain.doFilter(req, resp);
             return;
         }
@@ -34,6 +39,6 @@ public class AuthFilter implements Filter {
 
     private boolean anyMatch(String uri, Set<String> set) {
         return set.stream()
-                .anyMatch(uri::endsWith);
+                .anyMatch(uri::contains);
     }
 }

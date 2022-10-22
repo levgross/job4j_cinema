@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import ru.job4j.cinema.model.Session;
 import ru.job4j.cinema.service.SessionService;
 import ru.job4j.cinema.util.Utility;
 
@@ -38,9 +37,9 @@ public class SessionController {
 
     @GetMapping("/photoSession/{sessionId}")
     public ResponseEntity<Resource> download(@PathVariable("sessionId") Integer sessionId) {
-
-        Session film = sessionService.findById(sessionId);
-        ClassPathResource resource = new ClassPathResource("/img/" + film.getName() + ".jpg");
+        ClassPathResource resource = new ClassPathResource(
+                "/img/" + sessionService.findById(sessionId).getName() + ".jpg"
+        );
         byte[] photo = new byte[1028];
         try (InputStream is = resource.getInputStream()) {
             photo = is.readAllBytes();
@@ -58,9 +57,16 @@ public class SessionController {
     public String hall(@PathVariable("sessionId") Integer sessionId,
                        Model model,
                        HttpSession session) {
-        model.addAttribute("film", sessionService.findById(sessionId));
-        model.addAttribute("user", Utility.check(session));
         session.setAttribute("sessionID", sessionId);
+        model.addAttribute("sessionId", sessionId);
+        model.addAttribute("user", Utility.check(session));
+        return "hallRow";
+    }
+
+    @GetMapping("/hallRow")
+    public String hallRow(Model model, HttpSession session) {
+        model.addAttribute("sessionId", session.getAttribute("sessionID"));
+        model.addAttribute("user", Utility.check(session));
         return "hallRow";
     }
 
@@ -74,8 +80,7 @@ public class SessionController {
     @GetMapping("/ticketCell")
     public String ticketCell(Model model, HttpSession session) {
         model.addAttribute("row", session.getAttribute("row"));
-        model.addAttribute("film",
-                sessionService.findById((Integer) session.getAttribute("sessionID")));
+        model.addAttribute("sessionId", session.getAttribute("sessionID"));
         model.addAttribute("user", Utility.check(session));
         return "hallCell";
     }
@@ -85,5 +90,15 @@ public class SessionController {
                             HttpSession session) {
         session.setAttribute("cell", cell);
         return "redirect:/bookTicket";
+    }
+
+    @GetMapping("/bookTicket")
+    public String addTicket(Model model, HttpSession session) {
+        model.addAttribute("row", session.getAttribute("row"));
+        model.addAttribute("cell", session.getAttribute("cell"));
+        model.addAttribute("sessionID", session.getAttribute("sessionID"));
+        model.addAttribute("user", Utility.check(session));
+
+        return "addTicket";
     }
 }

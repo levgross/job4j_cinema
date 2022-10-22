@@ -26,14 +26,15 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                 <div class="navbar-nav">
-                    <a class="nav-item nav-link" th:href="@{/index}">Главная</a>
+                    <a class="nav-item nav-link" th:href="@{/index}">Main</a>
+					<a class="nav-item nav-link" th:href="@{/formAddUser}">Registration</a>
 					<a class="nav-item nav-link" th:if="${user.username == 'Guest'}" th:href="@{/loginPage}">
 						<span th:text="${user.username}"></span>
-						<span> | Войти</span>
+						<span> | Login</span>
 					</a>
 					<a class="nav-item nav-link" th:if="${user.username != 'Guest'}" th:href="@{/logout}">
 						<span th:text="${user.username}"></span>
-						<span> | Выйти</span>
+						<span> | Logout</span>
 					</a>
                 </div>
             </div>
@@ -42,7 +43,7 @@
         <table class="table">
             <tbody>
 				<a>
-				    <img th:width="300" th:high="300" th:src="@{|/photoSession/${film.id}|}"/>
+				    <img th:width="300" th:high="300" th:src="@{|/photoSession/${sessionId}|}"/>
 				</a>
             </tbody>
         </table>
