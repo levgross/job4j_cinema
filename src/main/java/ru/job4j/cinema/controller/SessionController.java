@@ -57,7 +57,7 @@ public class SessionController {
     public String hall(@PathVariable("sessionId") Integer sessionId,
                        Model model,
                        HttpSession session) {
-        session.setAttribute("sessionID", sessionId);
+        session.setAttribute("sessionId", sessionId);
         model.addAttribute("sessionId", sessionId);
         model.addAttribute("user", Utility.check(session));
         return "hallRow";
@@ -65,40 +65,39 @@ public class SessionController {
 
     @GetMapping("/hallRow")
     public String hallRow(Model model, HttpSession session) {
-        model.addAttribute("sessionId", session.getAttribute("sessionID"));
+        model.addAttribute("sessionId", session.getAttribute("sessionId"));
         model.addAttribute("user", Utility.check(session));
         return "hallRow";
     }
 
     @PostMapping("/chooseRow")
-    public String ticketRow(@RequestParam("row") int row,
+    public String chooseRow(@RequestParam("row") int row,
                             HttpSession session) {
         session.setAttribute("row", row);
         return "redirect:/ticketCell";
     }
 
     @GetMapping("/ticketCell")
-    public String ticketCell(Model model, HttpSession session) {
+    public String chooseCell(Model model, HttpSession session) {
         model.addAttribute("row", session.getAttribute("row"));
-        model.addAttribute("sessionId", session.getAttribute("sessionID"));
+        model.addAttribute("sessionId", session.getAttribute("sessionId"));
         model.addAttribute("user", Utility.check(session));
         return "hallCell";
     }
 
     @PostMapping("/chooseCell")
-    public String ticketCell(@RequestParam("cell") int cell,
-                            HttpSession session) {
+    public String chooseCell(@RequestParam("cell") int cell,
+                             HttpSession session) {
         session.setAttribute("cell", cell);
         return "redirect:/bookTicket";
     }
 
     @GetMapping("/bookTicket")
-    public String addTicket(Model model, HttpSession session) {
+    public String bookTicket(Model model, HttpSession session) {
         model.addAttribute("row", session.getAttribute("row"));
         model.addAttribute("cell", session.getAttribute("cell"));
-        model.addAttribute("sessionID", session.getAttribute("sessionID"));
+        model.addAttribute("sessionId", session.getAttribute("sessionId"));
         model.addAttribute("user", Utility.check(session));
-
         return "addTicket";
     }
 }
