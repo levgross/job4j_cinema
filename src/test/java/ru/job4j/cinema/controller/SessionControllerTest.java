@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import ru.job4j.cinema.model.Session;
 import ru.job4j.cinema.model.User;
 import ru.job4j.cinema.service.SessionService;
+import ru.job4j.cinema.util.Utility;
 
 import javax.servlet.http.HttpSession;
 import java.util.Arrays;
@@ -27,9 +28,9 @@ class SessionControllerTest {
                 new Session(1, "name_1"),
                 new Session(2, "name_2")
         );
-        User user = new User(0, "name", "email", "phone");
+        User user = new User(1, "name", "email", "phone");
         HttpSession httpSession = mock(HttpSession.class);
-        httpSession.setAttribute("user", user);
+        when(Utility.check(httpSession)).thenReturn(user);
         Model model = mock(Model.class);
         SessionService service = mock(SessionService.class);
         when(service.findAll()).thenReturn(sessions);
@@ -58,11 +59,11 @@ class SessionControllerTest {
 
     @Test
     public void whenHall() {
-        User user = new User(0, "name", "email", "phone");
+        User user = new User(1, "name", "email", "phone");
         Model model = mock(Model.class);
         SessionService service = mock(SessionService.class);
         HttpSession httpSession = mock(HttpSession.class);
-        httpSession.setAttribute("user", user);
+        when(Utility.check(httpSession)).thenReturn(user);
         SessionController controller = new SessionController(service);
         String page = controller.hall(5, model, httpSession);
         verify(httpSession).setAttribute("sessionId", 5);
@@ -73,13 +74,13 @@ class SessionControllerTest {
 
     @Test
     public void whenHallRow() {
-        User user = new User(0, "name", "email", "phone");
+        User user = new User(1, "name", "email", "phone");
         Model model = mock(Model.class);
         SessionService service = mock(SessionService.class);
         SessionController controller = new SessionController(service);
         HttpSession httpSession = mock(HttpSession.class);
         when(httpSession.getAttribute("sessionId")).thenReturn(1);
-        httpSession.setAttribute("user", user);
+        when(Utility.check(httpSession)).thenReturn(user);
         String page = controller.hallRow(model, httpSession);
         verify(model).addAttribute("sessionId", 1);
         verify(model).addAttribute("user", user);
@@ -98,14 +99,14 @@ class SessionControllerTest {
 
     @Test
     public void whenTicketCell() {
-        User user = new User(0, "name", "email", "phone");
+        User user = new User(1, "name", "email", "phone");
         Model model = mock(Model.class);
         SessionService service = mock(SessionService.class);
         SessionController controller = new SessionController(service);
         HttpSession httpSession = mock(HttpSession.class);
         when(httpSession.getAttribute("row")).thenReturn(3);
         when(httpSession.getAttribute("sessionId")).thenReturn(2);
-        httpSession.setAttribute("user", user);
+        when(Utility.check(httpSession)).thenReturn(user);
         String page = controller.chooseCell(model, httpSession);
         verify(model).addAttribute("row", 3);
         verify(model).addAttribute("sessionId", 2);
@@ -125,7 +126,7 @@ class SessionControllerTest {
 
     @Test
     public void whenBookTicket() {
-        User user = new User(0, "name", "email", "phone");
+        User user = new User(1, "name", "email", "phone");
         Model model = mock(Model.class);
         SessionService service = mock(SessionService.class);
         SessionController controller = new SessionController(service);
@@ -133,7 +134,7 @@ class SessionControllerTest {
         when(httpSession.getAttribute("row")).thenReturn(1);
         when(httpSession.getAttribute("cell")).thenReturn(2);
         when(httpSession.getAttribute("sessionId")).thenReturn(3);
-        httpSession.setAttribute("user", user);
+        when(Utility.check(httpSession)).thenReturn(user);
         String page = controller.bookTicket(model, httpSession);
         verify(model).addAttribute("row", 1);
         verify(model).addAttribute("cell", 2);
