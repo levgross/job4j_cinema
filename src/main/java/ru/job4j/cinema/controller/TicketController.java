@@ -24,17 +24,16 @@ public class TicketController {
     }
 
     @PostMapping("/createTicket")
-    public String createTicket(HttpSession session) {
+    public String createTicket(Model model, HttpSession session) {
         Ticket ticket = new Ticket(
                 0,
-                new Session((Integer) session.getAttribute("sessionID"), ""),
+                new Session((Integer) session.getAttribute("sessionId"), ""),
                 (Integer) session.getAttribute("row"),
                 (Integer) session.getAttribute("cell"),
                 (User) session.getAttribute("user")
         );
         Optional<Ticket> ticketDB = ticketService.add(ticket);
         if (ticketDB.isEmpty()) {
-
             return "redirect:/fail";
         }
         return "redirect:/success";
@@ -44,7 +43,7 @@ public class TicketController {
     public String success(Model model, HttpSession session) {
         model.addAttribute("row", session.getAttribute("row"));
         model.addAttribute("cell", session.getAttribute("cell"));
-        model.addAttribute("sessionID", session.getAttribute("sessionID"));
+        model.addAttribute("sessionId", session.getAttribute("sessionId"));
         model.addAttribute("user", Utility.check(session));
         return "success";
     }
@@ -53,7 +52,7 @@ public class TicketController {
     public String fail(Model model, HttpSession session) {
         model.addAttribute("message", "Unfortunately, the chosen seat is been bought by someone else!"
                 + " Please, try another one.");
-        model.addAttribute("sessionID", session.getAttribute("sessionID"));
+        model.addAttribute("sessionId", session.getAttribute("sessionId"));
         model.addAttribute("user", Utility.check(session));
         return "fail";
     }
