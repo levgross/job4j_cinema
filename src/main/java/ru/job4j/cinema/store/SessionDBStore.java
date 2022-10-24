@@ -58,6 +58,7 @@ public class SessionDBStore {
         try (Connection cn = pool.getConnection();
              PreparedStatement ps = cn.prepareStatement(UPDATE)) {
             ps.setString(1, session.getName());
+            ps.setInt(2, session.getId());
             ps.execute();
         } catch (SQLException e) {
             LOG.error("Exception in method .add(Session)", e);
